@@ -19,6 +19,7 @@ From a non-root terminal type the following..
 <CODE><p>
 git clone https://github.com/BruceSteers/debian_etcher_setup<p>
 cd ./debian_etcher_setup<p>
+chmod +x ./Setup_Etcher<p>
 sudo ./Setup_Etcher<p>
 </CODE>
 
