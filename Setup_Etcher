@@ -32,8 +32,9 @@ exit
 fi
 
 # Change save file name for testing..
-#POLSAVE="/usr/share/polkit-1/actions/org.freedesktop.policykit.pkexec.policy_test"
+
 POLSAVE="/usr/share/polkit-1/actions/org.freedesktop.policykit.pkexec.policy"
+#POLSAVE="/$SUDO_USER/Desktop/org.freedesktop.policykit.pkexec.policy"
 
 
 # check if pkexec policy exists and slot the Etcher policy in
@@ -49,6 +50,7 @@ OIFS=$IFS
 IFS=$'\n'
 read -d '\' -ea FARRAY <<< "$PFILE\\"
 CNT=0
+SKIP=0
 echo -n "" >$POLSAVE
 
 while [ $CNT -lt ${#FARRAY[@]} ]
@@ -70,8 +72,19 @@ echo "$TXT"'
   </action>
 ' >>$POLSAVE
 else
+ if [[ $TXT = *"run-balenaEtcher.AppImage"* ]]; then  # Found an existing entry so skip it
+ SKIP=1
 
-echo "$TXT" >>$POLSAVE
+ else
+  if [ $SKIP -eq 1 ]; then
+    if [[ $TXT = *"</action>"* ]]; then
+    SKIP=0
+    fi 
+  else
+  echo "$TXT" >>$POLSAVE
+  fi
+ fi
+
 fi
 ((CNT++))
 done
