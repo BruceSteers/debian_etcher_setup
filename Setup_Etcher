@@ -22,7 +22,7 @@ if [ -z "$FMP" ]; then
 apt-get install ffmpeg
 fi
 
-zenity --info --text="First select your balenaEtcher.AppImage file\n"
+zenity --info --text="Okay here we go...\nThe first step is to select your balenaEtcher.AppImage file\n"
 
 PTH=$(zenity --file-selection --title="Select your balenaEtcher.AppImage file" --filename=balenaEtcher.AppImage --save --file-filter="AppImage|*.AppImage" --file-filter="All Files|*")
 
