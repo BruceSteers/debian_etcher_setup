@@ -117,10 +117,10 @@ Icon=/usr/share/icons/Etcher-icon.png
 Icon[en_GB]=/usr/share/icons/Etcher-icon.png
 Name[en_GB]=$LNAME
 Exec=pkexec $PTH
-Name=$LNAME" >/home/$SUDO_USER/Desktop/$LNAME.desktop
+Name=$LNAME" >"/home/$SUDO_USER/Desktop/$LNAME.desktop"
 
-chown $SUDO_USER /home/$SUDO_USER/Desktop/$LNAME.desktop
-chmod +x /home/$SUDO_USER/Desktop/$LNAME.desktop
+chown $SUDO_USER "/home/$SUDO_USER/Desktop/$LNAME.desktop"
+chmod +x "/home/$SUDO_USER/Desktop/$LNAME.desktop"
 
 zenity --info --width=200 --text="All done, now use the desktop launcher\n$LNAME..."
 
