@@ -18,7 +18,7 @@ fi
 # being able to launch Etcher from a root terminal)
 
 FMP=$(which ffmpeg)
-if [ -z $FMP ]; then
+if [ -z "$FMP" ]; then
 apt-get install ffmpeg
 fi
 
@@ -102,7 +102,7 @@ fi
 
 # policy config done now for Desktop launcher and icon
 LNAME=$(zenity --entry --text="Config done\nLaunchers can now be made using the command..\npkexec $PTH\n\nNow to make a desktop launcher\nGive your launcher a name\n(Press cancel to skip making launcher and exit)" --entry-text="Etcher")
-if [ -z $LNAME ]; then
+if [ -z "$LNAME" ]; then
 zenity --info --text="Aborted, Quitting..."
 exit
 fi
