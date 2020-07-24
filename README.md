@@ -17,10 +17,10 @@ github method...
 
 From a non-root terminal type the following..<BR>
 <CODE>
-git clone https://github.com/BruceSteers/debian_etcher_setup<BR>
+git clone https://github.com/BruceSteers/debian_etcher_setup<p>
 </CODE>
 <CODE>
-cd ./debian_etcher_setup<BR>
+cd ./debian_etcher_setup<p>
 </CODE>
 <CODE>
 sudo ./Setup_Etcher
