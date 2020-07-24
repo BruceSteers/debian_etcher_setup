@@ -15,7 +15,7 @@ downloaded from https://www.balena.io/etcher/
 How to use...
 github method...
 
-From a non-root terminal type the following..
+From a non-root terminal type the following..<BR>
 <code>
 git clone https://github.com/BruceSteers/debian_etcher_setup<br>
 cd ./debian_etcher_setup<br>
