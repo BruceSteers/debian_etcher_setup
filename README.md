@@ -15,15 +15,11 @@ downloaded from https://www.balena.io/etcher/
 How to use...
 github method...
 
-From a non-root terminal type the following..<BR>
-<CODE>
+From a non-root terminal type the following..
+<CODE><p>
 git clone https://github.com/BruceSteers/debian_etcher_setup<p>
-</CODE>
-<CODE>
 cd ./debian_etcher_setup<p>
-</CODE>
-<CODE>
-sudo ./Setup_Etcher
+sudo ./Setup_Etcher<p>
 </CODE>
 
 You will be asked to provide the path to your downloaded balenaEtcher.AppImage file
