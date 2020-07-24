@@ -69,18 +69,19 @@ echo "$TXT"'
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">'"$PTH"'</annotate>
     <annotate key="org.freedesktop.policykit.exec.allow_gui">TRUE</annotate>
-  </action>
-' >>$POLSAVE
+  </action>' >>$POLSAVE
 else
  if [[ $TXT = *"run-balenaEtcher.AppImage"* ]]; then  # Found an existing entry so skip it
  SKIP=1
-
  else
   if [ $SKIP -eq 1 ]; then
     if [[ $TXT = *"</action>"* ]]; then
     SKIP=0
     fi 
   else
+    if [[ $TXT = *"<action id="* ]]; then
+    echo "" >>$POLSAVE # Add a space between entries as "read" removes them
+    fi
   echo "$TXT" >>$POLSAVE
   fi
  fi
@@ -114,21 +115,20 @@ echo '<?xml version=“1.0” encoding=“UTF-8”?>
 fi
 
 # policy config done now for Desktop launcher and icon
-LNAME=$(zenity --entry --text="Config done\nLaunchers can now be made using the command..\npkexec $PTH\n\nNow to make a desktop launcher\nGive your launcher a name\n(Press cancel to skip making launcher and exit)" --entry-text="Etcher")
+LNAME=$(zenity --entry --text="Config done\nLaunchers can now be made using the command..\npkexec $PTH\n\nNow to make a desktop launcher\nGive your launcher a name\n(Press cancel to skip making launcher and exit)" --entry-text="balenaEtcher")
 if [ -z "$LNAME" ]; then
 zenity --info --text="Aborted, Quitting..."
 exit
 fi
+if [ ! -e "/usr/share/icons/Etcher-icon.png" ]; then
 cp Etcher-icon.png /usr/share/icons/Etcher-icon.png
-
+fi
 
 echo "[Desktop Entry]
 Version=1.0
 Type=Application
 Terminal=false
 Icon=/usr/share/icons/Etcher-icon.png
-Icon[en_GB]=/usr/share/icons/Etcher-icon.png
-Name[en_GB]=$LNAME
 Exec=pkexec $PTH
 Name=$LNAME" >"/home/$SUDO_USER/Desktop/$LNAME.desktop"
 
