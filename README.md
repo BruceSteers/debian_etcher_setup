@@ -16,10 +16,11 @@ How to use...
 github method...
 
 From a non-root terminal type the following..
+<code>
 git clone https://github.com/BruceSteers/debian_etcher_setup
 cd ./debian_etcher_setup
 sudo ./Setup_Etcher
-
+</code>
 
 You will be asked to provide the path to your downloaded balenaEtcher.AppImage file
 Then a pkexec policy will be added to the system for it and a desktop launcher created
