@@ -1,0 +1,126 @@
+#!/bin/bash
+
+# This is a simple setup script for getting balenaEtcher.AppImage working on Debian Systems.
+# Written by Bruce Steers
+
+
+
+if [ "$USER" != "root" ]; then
+zenity --info --width=300 --text="You must run this script as root !\nFrom a non root shell type\nsudo ./Setup_Etcher"
+exit
+fi
+if [ -z $SUDO_USER ]; then
+zenity --info --width=300 --text="You cannot run this scrip from a root shell\nfrom a non root shell type\nsudo ./Setup_Etcher"
+exit
+fi
+
+# check ffmpeg is installed as this was all that was stopping me 
+# being able to launch Etcher from a root terminal)
+
+FMP=$(which ffmpeg)
+if [ -z $FMP ]; then
+apt-get install ffmpeg
+fi
+
+zenity --info --text="First select your balenaEtcher.AppImage file\n"
+
+PTH=$(zenity --file-selection --title="Select your balenaEtcher.AppImage file" --filename=balenaEtcher-1.5.101-x64.AppImage --save --file-filter="AppImage|*.AppImage" --file-filter="All Files|*")
+
+if [ -z $PTH ]; then
+zenity --info --text="Aborted, Quitting..."
+exit
+fi
+
+# Change save file name for testing..
+#POLSAVE="/usr/share/polkit-1/actions/org.freedesktop.policykit.pkexec.policy_test"
+POLSAVE="/usr/share/polkit-1/actions/org.freedesktop.policykit.pkexec.policy"
+
+
+# check if pkexec policy exists and slot the Etcher policy in
+# rather than simply writing a new file
+
+if [ -e "/usr/share/polkit-1/actions/org.freedesktop.policykit.pkexec.policy" ]; then
+# back up the original
+cp "/usr/share/polkit-1/actions/org.freedesktop.policykit.pkexec.policy" "/usr/share/polkit-1/actions/org.freedesktop.policykit.pkexec.policy_bk"
+
+PFILE=$(cat "/usr/share/polkit-1/actions/org.freedesktop.policykit.pkexec.policy")
+OIFS=$IFS
+
+IFS=$'\n'
+read -d '\' -ea FARRAY <<< "$PFILE\\"
+CNT=0
+echo -n "" >$POLSAVE
+
+while [ $CNT -lt ${#FARRAY[@]} ]
+do
+TXT="${FARRAY[$CNT]}"
+if [[ "$TXT" = *"<policyconfig>"* ]]; then
+echo "$TXT"'
+
+  <action id="org.freedesktop.policykit.pkexec.run-balenaEtcher.AppImage">
+    <description>Balena Etcher</description>
+    <message>Etcher requires SuperUser access</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">'"$PTH"'</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">TRUE</annotate>
+  </action>
+' >>$POLSAVE
+else
+
+echo "$TXT" >>$POLSAVE
+fi
+((CNT++))
+done
+IFS=$OIFS
+
+else
+echo '<?xml version=“1.0” encoding=“UTF-8”?>
+<!DOCTYPE policyconfig PUBLIC
+“-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN”
+“http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd”>
+<policyconfig>
+
+  <action id="org.freedesktop.policykit.pkexec.run-balenaEtcher.AppImage">
+    <description>Balena Etcher</description>
+    <message>Etcher requires SuperUser access</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">'"$PTH"'</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">TRUE</annotate>
+  </action>
+
+</policyconfig>
+' >$POLSAVE
+fi
+
+# policy config done now for Desktop launcher and icon
+LNAME=$(zenity --entry --text="Config done\nLaunchers can now be made using the command..\npkexec $PTH\n\nNow to make a desktop launcher\nGive your launcher a name\n(Press cancel to skip making launcher and exit)" --entry-text="Etcher")
+if [ -z $LNAME ]; then
+zenity --info --text="Aborted, Quitting..."
+exit
+fi
+cp Etcher-icon.png /usr/share/icons/Etcher-icon.png
+
+
+echo "[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Icon=/usr/share/icons/Etcher-icon.png
+Icon[en_GB]=/usr/share/icons/Etcher-icon.png
+Name[en_GB]=$LNAME
+Exec=pkexec $PTH
+Name=$LNAME" >/home/$SUDO_USER/Desktop/$LNAME.desktop
+
+chown $SUDO_USER /home/$SUDO_USER/Desktop/$LNAME.desktop
+chmod +x /home/$SUDO_USER/Desktop/$LNAME.desktop
+
+zenity --info --width=200 --text="All done, now use the desktop launcher\n$LNAME..."
+
