@@ -24,7 +24,7 @@ fi
 
 zenity --info --text="First select your balenaEtcher.AppImage file\n"
 
-PTH=$(zenity --file-selection --title="Select your balenaEtcher.AppImage file" --filename=balenaEtcher-1.5.101-x64.AppImage --save --file-filter="AppImage|*.AppImage" --file-filter="All Files|*")
+PTH=$(zenity --file-selection --title="Select your balenaEtcher.AppImage file" --filename=balenaEtcher.AppImage --save --file-filter="AppImage|*.AppImage" --file-filter="All Files|*")
 
 if [ -z $PTH ]; then
 zenity --info --text="Aborted, Quitting..."
