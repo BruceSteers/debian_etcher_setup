@@ -1,7 +1,7 @@
 # debian_etcher_setup
-configure pkexec and create a desktop launcher for balenaEtcher on Debian
+configure pkexec and create a desktop launcher for balenaEtcher.AppImage on Debian
 
-This is a simple setup script for getting Etcher working on Debian Systems.
+This is a simple setup script for getting the Etcher.AppImage working on Debian Systems.
 
 Written by Bruce Steers
 
